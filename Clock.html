@@ -1,0 +1,227 @@
+
+<HTML>
+<HEAD>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<TITLE>Clock</TITLE>
+	<style>
+		div#clock{
+			max-width: 500px;
+			margin: 0px auto;
+			background-color: #FFF5EB;
+			text-align: center;
+		}
+		span#text{
+			vertical-align: super;
+			font-size: 28px;
+		}
+		div#timeBlock{
+			display: inline;
+			font-size:0px;
+			width: 200px;
+		}
+		img.size19x32{
+			width: 19px;
+			height: 32px;
+		}
+		img.size8x32{
+			width: 8px;
+			height: 32px;
+		}
+		
+		body{
+			cursor: default;
+		}
+		span, td.num{
+			font-size: 30px;
+		}
+		table, td:not(.num){
+			border: 1px solid black;
+		}
+		input{
+			height: 56px;
+		}
+		table{
+			float: left;
+			margin: 0px 5px;
+		}
+	</style>
+
+	</style>
+</HEAD>
+<BODY>
+	
+	<div id="clock">
+		<span id="text">Current Time: </span>
+		<div id="timeBlock">
+			<IMG SRC="image/left.gif" class="size19x32">
+			<IMG SRC="image/0.gif" class="size19x32" name="H0">
+			<IMG SRC="image/0.gif" class="size19x32" name="H1">
+			<IMG SRC="image/dot.gif" class="size8x32">
+			<IMG SRC="image/0.gif" class="size19x32" name="M0">
+			<IMG SRC="image/0.gif" class="size19x32" name="M1">
+			<IMG SRC="image/dot.gif" class="size8x32">
+			<IMG SRC="image/0.gif" class="size19x32" name="S0">
+			<IMG SRC="image/0.gif" class="size19x32" name="S1">
+			<IMG SRC="image/right.gif" class="size19x32">
+		</div>
+	</div>
+	<hr>
+	<table>
+		<tbody>
+			<tr>
+				<td id="hour_block" rowspan="2" class="num">00</td>
+				<td id="h_up" onclick="key='h_up';adjust();">▲</td>
+				<td id="minute_block" rowspan="2" class="num">00</td>
+				<td id="m_up" onclick="key='m_up';adjust();">▲</td>
+				<td id="second_block" rowspan="2" class="num">00</td>
+				<td id="s_up" onclick="key='s_up';adjust();">▲</td>
+			</tr>
+			<tr>
+				<td id="h_down" onclick="key='h_down';adjust();">▼</td>
+				<td id="m_down" onclick="key='m_down';adjust();">▼</td>
+				<td id="s_down" onclick="key='s_down';adjust();">▼</td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="button" value="set alarm" onclick="setAlarm();"/>
+	<span id="alarm_P">Alarm: </span>
+	<hr>
+	<input type="text" id="iText" maxlength="8" value="00:00:00" />
+	<input type="button" value="set alarm1" onclick="setAlarm1();" />
+	<p id="alarm_P1">Alarm: </p>
+
+
+	<SCRIPT>
+		var h = 0;
+		var m = 0;
+		var s = 0;
+		var key;
+		var alarm = [];
+		var hour_block = document.getElementById("hour_block");
+		var minute_block = document.getElementById("minute_block");
+		var second_block = document.getElementById("second_block");
+		var alarm_P = document.getElementById("alarm_P");
+		
+		var timerID = setInterval('tictoc()',1000);
+		
+		function tictoc(){
+			var CTime = new Date();	
+			checkAlarm(CTime);
+		}
+		function setAlarm(){
+			alarm = [];
+			alarm.push(h);
+			alarm.push(m);
+			alarm.push(s);
+			alarm_P.innerHTML = 
+				"Alarm: "
+				+ ( h<10 ? ""+"0"+h : h ) + ":"
+				+ ( m<10 ? ""+"0"+m : m ) + ":"
+				+ ( s<10 ? ""+"0"+s : s );
+		}
+		function checkAlarm(date){
+			if(date.getHours()==alarm[0] && date.getMinutes()==alarm[1] && date.getSeconds()==alarm[2]){
+				alarm_P.innerHTML = "wake up!";
+				
+			}
+		}
+		function adjust(){
+			switch( key ){
+				case 'h_up':
+					h==23 ? h=0 : h++;
+					break;
+				case 'm_up':
+					m==59 ? m=0 : m++;
+					break;
+				case 's_up':
+					s==59 ? s=0 : s++;
+					break;
+				case 'h_down':
+					h==0 ? h=23 : h--;
+					break;
+				case 'm_down':
+					m==0 ? m=59 : m--;
+					break;
+				case 's_down':
+					s==0 ? s=59 : s--;
+					break;
+			}
+			takePlace();
+		}
+		
+		function takePlace(){
+			hour_block.innerHTML = h<10 ? ""+"0"+h : h;
+			minute_block.innerHTML = m<10 ? ""+"0"+m : m;
+			second_block.innerHTML = s<10 ? ""+"0"+s : s;
+		}
+
+		var timerID = setInterval('clock()',1000);
+		
+		function clock(){
+			if (document.images){
+				var ct = new Date();
+				var h = "0"+ct.getHours();
+				var m = "0"+ct.getMinutes();
+				var s = "0"+ct.getSeconds();
+				var re = ct.getHours() - 12;
+				h = h.substring(h.length-2,h.length+1);
+				m = m.substring(m.length-2,m.length+1);
+				s = s.substring(s.length-2,s.length+1);
+				var h0 = h.substring(0,1);
+				var h1 = h.substring(1,2);
+				var m0 = m.substring(0,1);
+				var m1 = m.substring(1,2);
+				var s0 = s.substring(0,1);
+				var s1 = s.substring(1,2);
+				
+				if(ct.getHours() <= 12){
+					text.innerHTML = "Current Time: Am: ";
+					document.H0.src="image/"+h0+".gif";
+					document.H1.src="image/"+h1+".gif";
+					document.M0.src="image/"+m0+".gif";
+					document.M1.src="image/"+m1+".gif";
+					document.S0.src="image/"+s0+".gif";
+					document.S1.src="image/"+s1+".gif";
+				}else{
+					text.innerHTML = "Current Time: Pm: ";
+					document.H0.src="image/0.gif";
+					document.H1.src="image/"+re+".gif";
+					document.M0.src="image/"+m0+".gif";
+					document.M1.src="image/"+m1+".gif";
+					document.S0.src="image/"+s0+".gif";
+					document.S1.src="image/"+s1+".gif";
+				}
+				
+			}
+		}
+		
+		var alarm1 = [];
+		
+		var alarm_P1 = document.getElementById("alarm_P1");
+		
+		var timerID2 = setInterval('tictoc3()',1000);
+		
+		function tictoc3(){
+			var CTime = new Date();		
+			checkAlarm1(CTime);
+		}
+		function setAlarm1(){
+			alarm1 = document.getElementById("iText").value.split(":");
+			alarm_P1.innerHTML = "Alarm: " + document.getElementById("iText").value;
+		}
+		function checkAlarm1(date){
+			if(alarm1.length){
+				if(date.getHours()==alarm1[0] && date.getMinutes()==alarm1[1] && date.getSeconds()==alarm1[2]){
+					alarm_P1.innerHTML = "wake up!";
+					
+				}else{
+				}
+			}else{
+			}
+		}
+
+	</SCRIPT>
+	
+	
+</BODY>
+</HTML>
